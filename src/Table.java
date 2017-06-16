@@ -4,9 +4,7 @@
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
+import java.io.File;
 
 public class Table {
 
@@ -37,17 +35,15 @@ public class Table {
         file.close();
     }
 
-    private static void run(RandomAccessFile file, int workers) throws IOException, InterruptedException {
-        FileChannel inChannel = file.getChannel();
+    private static void run(File file, int workers) throws IOException, InterruptedException {
         long start = 0;
-        long step = inChannel.size() / workers;
+        long step = file.length() / workers;
         long end = step;
 
         threadWorkers = new Thread[workers];
 
         for (int i = 0; i < workers; i++) {
-            MappedByteBuffer buffer = inChannel.map(FileChannel.MapMode.READ_ONLY, start, step);
-            threadWorkers[i] = new Thread(new Worker(buffer, start, end));
+            threadWorkers[i] = new Thread(new Worker(file, start, end));
 
             if (i == workers - 1) {
                 break;
