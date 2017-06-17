@@ -29,6 +29,29 @@ public class Worker implements Runnable {
     @Override
     public void run() {
         long bufferLength = end - start;
+
+        Reader bufferReader = createBufferReader(file);
+
+        for (long i = 0; i < bufferLength; i++) {
+            readCharacter(bufferReader);
+        }
+
+        printFrequencyMap(map);
+    }
+
+    private void readCharacter(Reader bufferReader) {
+        int intCharacter = 0;
+
+        try {
+            intCharacter = bufferReader.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        collectDataInMap(intCharacter);
+    }
+
+    private Reader createBufferReader(File file) {
         InputStream inputStream = null;
 
         try {
@@ -46,30 +69,23 @@ public class Worker implements Runnable {
             e.printStackTrace();
         }
 
-        for (long i = 0; i < bufferLength; i++) {
-            int intCharacter = 0;
-
-            try {
-                intCharacter = buffer.read();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            char character = (char) intCharacter;
-            collectDataInMap(character);
-        }
-
-        for (Map.Entry<Character, Integer> characterIntegerEntry : map.entrySet()) {
-            System.out.println(characterIntegerEntry.toString());
-        }
+        return buffer;
     }
 
-    private void collectDataInMap(char character) {
+    private void collectDataInMap(int intCharacter) {
+        char character = (char) intCharacter;
+
         if (!map.containsKey(character)) {
             map.put(character, 1);
         } else {
             int n = map.get(character);
             map.put(character, ++n);
+        }
+    }
+
+    private void printFrequencyMap(Map<Character, Integer> map) {
+        for (Map.Entry<Character, Integer> characterIntegerEntry : map.entrySet()) {
+            System.out.print(characterIntegerEntry.toString() + "  ");
         }
     }
 }

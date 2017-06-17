@@ -1,4 +1,3 @@
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.File;
 
@@ -6,26 +5,14 @@ import java.io.File;
  * Created by nikolai on 12.06.17.
  */
 public class Table {
-
     private static Thread[] threadWorkers;
+    private static File file = new File(
+            "/home/nikolai/Desktop/ttt.txt");
 
-    public static void main(String[] args) throws InterruptedException, FileNotFoundException {
-        for (int i = 0; i < 2; i++) {
-            try {
-                runMain();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private static void runMain() throws IOException, InterruptedException {
-        File file = new File(
-                "/home/nikolai/Desktop/text1.txt");
-
+    public static void main(String[] args) throws InterruptedException, IOException {
         long start = System.currentTimeMillis();
 
-        run(file, 2);
+        run(file, 1);
 
         long end = System.currentTimeMillis() - start;
 
