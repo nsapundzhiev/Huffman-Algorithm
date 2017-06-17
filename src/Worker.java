@@ -10,6 +10,9 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Created by nikolai on 12.06.17.
+ */
 public class Worker implements Runnable {
     private File file;
     private Map<Character, Integer> map;
@@ -27,39 +30,41 @@ public class Worker implements Runnable {
     public void run() {
         long bufferLength = end - start;
         InputStream inputStream = null;
-        
+
         try {
             inputStream = new FileInputStream(file);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        
+
         Reader reader = new InputStreamReader(inputStream, Charset.defaultCharset());
         Reader buffer = new BufferedReader(reader);
-        
+
         try {
             buffer.skip(start);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        for (long i = 0; i < bufferLenght; i++) {
+
+        for (long i = 0; i < bufferLength; i++) {
             int intCharacter = 0;
-            
+
             try {
                 intCharacter = buffer.read();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            
+
             char character = (char) intCharacter;
             collectDataInMap(character);
         }
-        
-        System.out.println(map.toString());
-    }    
-    
-    private void collectDataInMap(char character) {        
+
+        for (Map.Entry<Character, Integer> characterIntegerEntry : map.entrySet()) {
+            System.out.println(characterIntegerEntry.toString());
+        }
+    }
+
+    private void collectDataInMap(char character) {
         if (!map.containsKey(character)) {
             map.put(character, 1);
         } else {

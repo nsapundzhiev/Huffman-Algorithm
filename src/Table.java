@@ -1,11 +1,10 @@
-/**
- * Created by nikolai on 12.06.17.
- */
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.File;
 
+/**
+ * Created by nikolai on 12.06.17.
+ */
 public class Table {
 
     private static Thread[] threadWorkers;
@@ -21,8 +20,8 @@ public class Table {
     }
 
     private static void runMain() throws IOException, InterruptedException {
-        RandomAccessFile file = new RandomAccessFile(
-                "/home/nikolai/Desktop/test.txt", "r");
+        File file = new File(
+                "/home/nikolai/Desktop/text1.txt");
 
         long start = System.currentTimeMillis();
 
@@ -31,8 +30,6 @@ public class Table {
         long end = System.currentTimeMillis() - start;
 
         System.out.println("Program time : " + end);
-
-        file.close();
     }
 
     private static void run(File file, int workers) throws IOException, InterruptedException {
@@ -52,7 +49,7 @@ public class Table {
             start += step;
 
             if (i == workers - 2) {
-                end = inChannel.size();
+                end = file.length();
             } else {
                 end += step;
             }
