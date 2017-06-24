@@ -1,11 +1,5 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import javax.swing.*;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,31 +9,48 @@ import java.util.Map;
  */
 public class Worker implements Runnable {
     private File file;
-    private Map<Character, Integer> map;
+    private Map<Integer, Integer> map;
     private long start;
     private long end;
+    private JTextArea messages;
 
-    public Worker(File file, long start, long end) {
+    public Worker(File file, long start, long end, JTextArea messages) {
         this.file = file;
         this.start = start;
         this.end = end;
         this.map = new HashMap<>();
+        this.messages = messages;
     }
 
     @Override
     public void run() {
+        if (messages != null) {
+            messages.append("Thread" + Thread.currentThread().getName() + " started.\n");
+        }
+
+        long startTime = System.currentTimeMillis();
+
         long bufferLength = end - start;
+
+//        System.out.println(bufferLength);
 
         Reader bufferReader = createBufferReader(file);
 
         for (long i = 0; i < bufferLength; i++) {
-            readCharacter(bufferReader);
+            readByte(bufferReader);
         }
 
         printFrequencyMap(map);
+
+        long endTime = System.currentTimeMillis() - startTime;
+
+        if (messages != null) {
+            messages.append("Thread" + Thread.currentThread().getName() + " stopped.\n");
+            messages.append("Thread" + Thread.currentThread().getName() + " execution time was (millis): " + endTime + "\n");
+        }
     }
 
-    private void readCharacter(Reader bufferReader) {
+    private void readByte(Reader bufferReader) {
         int intCharacter = 0;
 
         try {
@@ -72,20 +83,22 @@ public class Worker implements Runnable {
         return buffer;
     }
 
-    private void collectDataInMap(int intCharacter) {
-        char character = (char) intCharacter;
-
-        if (!map.containsKey(character)) {
-            map.put(character, 1);
+    private void collectDataInMap(int intByte) {
+        if (!map.containsKey(intByte)) {
+            map.put(intByte, 1);
         } else {
-            int n = map.get(character);
-            map.put(character, ++n);
+            int n = map.get(intByte);
+            map.put(intByte, ++n);
         }
     }
 
-    private void printFrequencyMap(Map<Character, Integer> map) {
-        for (Map.Entry<Character, Integer> characterIntegerEntry : map.entrySet()) {
-            System.out.print(characterIntegerEntry.toString() + "  ");
+    private void printFrequencyMap(Map<Integer, Integer> map) {
+        for (Map.Entry<Integer, Integer> characterIntegerEntry : map.entrySet()) {
+            if (messages != null) {
+                messages.append(characterIntegerEntry.toString() + "\n");
+            } else {
+                System.out.println(characterIntegerEntry.toString());
+            }
         }
     }
 }

@@ -1,33 +1,24 @@
-import java.io.IOException;
+import javax.swing.*;
 import java.io.File;
 
 /**
  * Created by nikolai on 12.06.17.
  */
 public class Table {
-    private static Thread[] threadWorkers;
-    private static File file = new File(
-            "/home/nikolai/Desktop/ttt.txt");
 
-    public static void main(String[] args) throws InterruptedException, IOException {
-        long start = System.currentTimeMillis();
+    public void run(String fileName, int workers, JTextArea messages) {
+        long startTime = System.currentTimeMillis();
 
-        run(file, 1);
+        File file = new File(fileName);
 
-        long end = System.currentTimeMillis() - start;
-
-        System.out.println("Program time : " + end);
-    }
-
-    private static void run(File file, int workers) throws IOException, InterruptedException {
         long start = 0;
         long step = file.length() / workers;
         long end = step;
 
-        threadWorkers = new Thread[workers];
+        Thread[] threadWorkers = new Thread[workers];
 
         for (int i = 0; i < workers; i++) {
-            threadWorkers[i] = new Thread(new Worker(file, start, end));
+            threadWorkers[i] = new Thread(new Worker(file, start, end, messages));
 
             if (i == workers - 1) {
                 break;
@@ -47,7 +38,20 @@ public class Table {
         }
 
         for (Thread worker : threadWorkers) {
-            worker.join();
+            try {
+                worker.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (messages != null) {
+            messages.append("Threads used in current run: " + workers + "\n");
+            messages.append("Total execution time for current run (millis): " +
+                    Long.toString(System.currentTimeMillis() - startTime) + "\n");
+        } else {
+            System.out.println("Total execution time for current run (millis): " +
+                    Long.toString(System.currentTimeMillis() - startTime));
         }
     }
 }
