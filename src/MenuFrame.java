@@ -1,16 +1,25 @@
-import javax.swing.*;
+import javax.swing.JFrame;
 
 /**
- * Created by nikolai on 18.06.17.
+ * Author Nikolai.
  */
 public class MenuFrame extends JFrame {
+    /**
+     * MenuPanel instance.
+     */
     private MenuPanel panel;
 
+    /**
+     * Constructor.
+     */
     public MenuFrame() {
         super("Huffman Algorithm");
         initComponents();
     }
 
+    /**
+     * Init components and add them in frame.
+     */
     private void initComponents() {
         panel = new MenuPanel();
         this.add(panel);

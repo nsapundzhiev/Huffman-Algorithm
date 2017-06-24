@@ -1,9 +1,16 @@
-import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.JComboBox;
+import javax.swing.JScrollPane;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
+
 /**
- * Created by nikolai on 18.06.17.
+ * Author Nikolai.
  */
 public class MenuPanel extends JPanel {
     private JLabel fileLabel;
@@ -71,13 +78,14 @@ public class MenuPanel extends JPanel {
 
         startProgram = new JButton("Start");
         startProgram.addActionListener(l -> {
-            Table table = new Table();
             String fileName = fileChooser.getSelectedFile().getAbsolutePath();
             int threadsCount = Integer.parseInt(threadsCountField.getSelectedItem().toString());
 
-            messages.setText("");
+            messages.setText("Program is running ...\n");
+            Table table = new Table();
             table.run(fileName, threadsCount, messages);
         });
+
         this.add(startProgram);
     }
 }

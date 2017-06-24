@@ -1,11 +1,22 @@
-import javax.swing.*;
-import java.io.*;
+import java.io.File;
+
+import java.io.Reader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.FileNotFoundException;
+
 import java.nio.charset.Charset;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JTextArea;
+
 /**
- * Created by nikolai on 12.06.17.
+ * Author Nikolai.
  */
 public class Worker implements Runnable {
     private File file;
@@ -24,6 +35,10 @@ public class Worker implements Runnable {
 
     @Override
     public void run() {
+        buildFrequencyMap();
+    }
+
+    private void buildFrequencyMap() {
         if (messages != null) {
             messages.append("Thread" + Thread.currentThread().getName() + " started.\n");
         }
@@ -32,15 +47,11 @@ public class Worker implements Runnable {
 
         long bufferLength = end - start;
 
-//        System.out.println(bufferLength);
-
         Reader bufferReader = createBufferReader(file);
 
         for (long i = 0; i < bufferLength; i++) {
             readByte(bufferReader);
         }
-
-        printFrequencyMap(map);
 
         long endTime = System.currentTimeMillis() - startTime;
 
@@ -48,6 +59,8 @@ public class Worker implements Runnable {
             messages.append("Thread" + Thread.currentThread().getName() + " stopped.\n");
             messages.append("Thread" + Thread.currentThread().getName() + " execution time was (millis): " + endTime + "\n");
         }
+
+        printFrequencyMap(map);
     }
 
     private void readByte(Reader bufferReader) {

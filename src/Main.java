@@ -1,5 +1,5 @@
 /**
- * Created by nikolai on 23.06.17.
+ * Author Nikolai.
  */
 public class Main {
 
@@ -9,7 +9,7 @@ public class Main {
         boolean tasks = false;
         int tasksNumber = 0;
         boolean quiet = false;
-        
+
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "-f":
@@ -39,6 +39,7 @@ public class Main {
 
         if (file && tasks && quiet) {
             Table table = new Table();
+            System.out.println("Program is running ...");
             table.run(fileName, tasksNumber, null);
         }
 

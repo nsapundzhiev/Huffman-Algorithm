@@ -1,8 +1,9 @@
-import javax.swing.*;
 import java.io.File;
 
+import javax.swing.JTextArea;
+
 /**
- * Created by nikolai on 12.06.17.
+ * Author Nikolai.
  */
 public class Table {
 
